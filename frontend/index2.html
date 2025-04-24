@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Analysis</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.css">
+    <script>
+        // Function to handle image upload and display the result
+        async function uploadImage(event) {
+            console.log(event);
+            event.preventDefault();
+            const formData = new FormData();
+            const fileInput = document.getElementById("image-file");
+            console.log(fileInput);
+            //document.getElementById("uploaded_image").innerHTML=fileInput; 
+            formData.append("image", fileInput.files[0]);
+
+            try {
+                const response = await fetch("http://localhost:8000/upload-image", {
+                    method: "POST",
+                    body: formData
+                });
+                const result = await response.json();
+                document.getElementById("summary").innerText = result.summary;
+                document.getElementById("image-filename").value = result.filename; // Set filename for questions
+            } catch (error) {
+                console.error("Error uploading image:", error);
+            }
+        }
+
+        // Function to ask a question about the uploaded image
+        async function askQuestion(event) {
+            event.preventDefault();
+            const filename = document.getElementById("image-filename").value;
+            const question = document.getElementById("question-input").value;
+
+            if (!filename || !question) {
+                alert("Please upload an image and enter a question.");
+                return;
+            }
+
+            const response = await fetch(`http://localhost:8000/ask-image/${filename}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ question })
+            });
+            const result = await response.json();
+            document.getElementById("answer").innerText = result.answer;
+        }
+    </script>
+</head>
+<body>
+    <header class="chat-header">Visio Bot</header>
+    <div class="results">
+        <!-- Image Summary -->
+        <div id="summary-container">
+            <!-- <h3>Image Summary</h3> -->
+             <p id="uploaded_image"></p>
+            <p id="summary"></p>
+        </div>
+
+        <div class="gap"></div>
+
+        <!-- Answer -->
+        <div id="answer-container">
+            <!-- <h3>Answer</h3> -->
+            <p id="answer"></p>
+        </div>
+    </div>
+
+    <div class="mainContent">
+      <!-- Upload Image Form -->
+        <!-- <h2>Upload Image</h2> -->
+        <form id="upload-form" onsubmit="uploadImage(event)">
+            <input type="file" id="image-file" required />
+            <i class="fa-solid fa-plus fa-xl" onclick="document.getElementById('image-file').click()" style="color: #63E6BE; margin-right:15px; cursor:pointer"></i>
+            <button type="submit" onclick="uploadImage(this)">Upload Image</button>
+        </form>
+
+        <!-- Ask Question -->
+        <!-- <h2>Ask a Question</h2> -->
+        <form id="question-form" onsubmit="askQuestion(event)">
+            <input type="hidden" id="image-filename" />
+            <input type="text" id="question-input" placeholder="Enter your question here" required />
+            <button type="submit" class="sub_btn">Ask Question</button>
+        </form>
+
+    </div>
+</body>
+</html>

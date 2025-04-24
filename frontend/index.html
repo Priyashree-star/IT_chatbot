@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mini GPT UI</title>
+  <link rel="stylesheet" href="index.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.css">
+</head>
+<body>
+  <div class="app">
+
+    <main class="chat">
+      <header class="chat-header">Visio Bot</header>
+
+      <div class="chat-history" id="chat-box"></div>
+
+      <footer class="chat-input">
+        <label class="upload-btn">
+            <i class="fa-solid fa-plus fa-xl" style="color: #63E6BE; margin-right:15px; cursor:pointer"></i>
+          <input type="file" accept="image/*" id="image-upload" hidden />
+        </label>
+        <input type="text" placeholder="Type your message..." />
+        <button>Send</button>
+      </footer>
+    </main>
+  </div>
+</body>
+</html>
